@@ -14,7 +14,6 @@ function App() {
     const newContact = remainingContacts[randomIndex]
     
     setfirstFive([...firstFive, newContact])
-    console.log(firstFive)
   }
 
   const sortbyPopularity = () => {
@@ -29,6 +28,13 @@ function App() {
     })
     setfirstFive(sortedArrayName);
   };
+
+  const deleteCeleb = (id) =>{
+    const celebDeleted = firstFive.filter((eachCeleb)=>{
+      return(eachCeleb.id !== id)
+    })
+    setfirstFive(celebDeleted)
+  }
   
 
 
@@ -46,6 +52,7 @@ function App() {
           <th>Popularity</th>
           <th>Won Oscar</th>
           <th>Won Emmy</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -69,6 +76,9 @@ function App() {
               {!eachContact.wonEmmy && (
                   <td></td>
                 )}
+              
+                <td><button type='button' onClick={() => deleteCeleb(eachContact.id)}>Delete</button></td>
+
             </tr>
             )
           })}
