@@ -1,34 +1,80 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
+// src/App
+import { useState } from 'react';
 import './App.css'
+import contacts from './contacts.json'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [firstFive, setfirstFive] = useState(contacts.slice(0,5));
+
+  const addRandomContact = () =>{
+    const remainingContacts = contacts.filter(eachContact => {
+      return (!firstFive.includes(eachContact))
+    })
+    const randomIndex = Math.floor(Math.random() * remainingContacts.length);
+    const newContact = remainingContacts[randomIndex]
+    
+    setfirstFive([...firstFive, newContact])
+    console.log(firstFive)
+  }
+
+  const sortbyPopularity = () => {
+    const sortedArray = [...firstFive].sort((a, b) => b.popularity - a.popularity);
+    setfirstFive(sortedArray);
+  };
+
+  const sortbyName = () => {
+    const sortedArrayName = [...firstFive].sort((a, b) => {
+      if (a.name < b.name) return -1
+      if (a.name > b.name) return 1
+    })
+    setfirstFive(sortedArrayName);
+  };
+  
+
 
   return (
-    <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </div>
+  <div className='App'>
+    <h1>Iron Contacts</h1>
+    <button type='button' onClick={addRandomContact}>Add random contact</button>
+    <button type='button' onClick={sortbyPopularity}>Sort by popularity</button>
+    <button type='button' onClick={sortbyName}>Sort by name</button>
+    <table>
+      <thead>
+        <tr>
+          <th>Picture</th>
+          <th>Name</th>
+          <th>Popularity</th>
+          <th>Won Oscar</th>
+          <th>Won Emmy</th>
+        </tr>
+      </thead>
+      <tbody>
+          {firstFive.map((eachContact)=>{
+            return(
+              <tr>
+              <td><img src={eachContact.pictureUrl} alt='pic' /></td>
+              <td>{eachContact.name}</td>
+              <td>{eachContact.popularity.toFixed(2)}</td>
+              
+              {eachContact.wonOscar && (
+                <td>🏆</td>
+              )}
+              {!eachContact.wonOscar && (
+                  <td></td>
+                )}
+
+                {eachContact.wonEmmy && (
+                <td>🏆</td>
+              )}
+              {!eachContact.wonEmmy && (
+                  <td></td>
+                )}
+            </tr>
+            )
+          })}
+      </tbody>
+    </table>
+  </div>
   )
 }
-
 export default App
